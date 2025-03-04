@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:monetary/components/bank_balance.dart';
+
+import 'components/add_monetary.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark(useMaterial3: true),
       home: const MyHomePage(title: 'Monetaru'),
     );
   }
@@ -27,20 +30,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  double balance = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: const Color.fromARGB(
+          255,
+          29,
+          29,
+          29,
+        ), // Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        padding: EdgeInsets.all(20),
+        color: const Color.fromARGB(255, 54, 54, 54),
+        height: double.infinity,
+        width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text('Test', style: Theme.of(context).textTheme.headlineMedium),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: bankBalance(balance),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: AddMoney(
+                callback: (double val) {
+                  setState(() {
+                    balance = balance + val;
+                  });
+                },
+              ),
+            ),
           ],
         ),
       ),
