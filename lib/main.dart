@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:monetary/components/bank_balance.dart';
+import 'package:monetary/components/bank_balance.component.dart';
 
-import 'components/add_monetary.dart';
+import 'components/add_monetary.component.dart';
+import 'services/main.service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  MainService mainSerive = MainService();
   double balance = 0;
+
+  @override
+  initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mainSerive.getBalance().then(
+        (val) => setState(() => balance = val),
+        onError: (err) => print(err),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 callback: (double val) {
                   setState(() {
                     balance = balance + val;
+                    mainSerive.setBalance(balance);
                   });
                 },
               ),
